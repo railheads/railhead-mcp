@@ -1,0 +1,30 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Bytecode & caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Editor scratch
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Local credentials (never commit)
+.railhead-token
+*.env
+
+# Example data
+/tmp/railhead-mcp-demo/
