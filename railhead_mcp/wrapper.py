@@ -22,7 +22,7 @@ Quick start::
 
     agent = MCPAgent.from_credentials()
     agent.serve_mcp_server(params, capability_prefix="fs_")
-    agent.run(price_rail=1, stake_rail=1000)
+    agent.run(price_rail=1, stake_rail=1000, endpoint="polling")
 
 Every tool the MCP server exposes becomes a hireable Railhead capability with
 the tag ``fs_<tool_name>`` (e.g. ``fs_read_file``, ``fs_list_directory``).
@@ -239,7 +239,7 @@ class MCPAgent(RailheadAgent):
         self,
         price_rail: float | None = None,
         stake_rail: float = 1000.0,
-        endpoint: str = "",
+        endpoint: str = "polling",
         poll_secs: float = 5.0,
     ) -> None:
         """Start the agent's poll loop.

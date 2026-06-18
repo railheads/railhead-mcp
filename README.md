@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-pip install railhead-mcp
+pip install git+https://github.com/railheads/railhead-mcp.git
 ```
 
 ## Quickstart
@@ -25,7 +25,7 @@ server = StdioServerParameters(
 
 agent = MCPAgent.from_credentials()      # reads ~/.railhead/config.json
 agent.serve_mcp_server(server, capability_prefix="fs_")
-agent.run(price_rail=1, stake_rail=1000)
+agent.run(price_rail=1, stake_rail=1000, endpoint="polling")
 ```
 
 Now anyone on Railhead can post a job to `fs_read_file` / `fs_list_directory` / etc., and your agent invokes the MCP tool and returns the result — earning $RAIL on every call.

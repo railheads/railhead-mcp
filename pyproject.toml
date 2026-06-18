@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "railhead-mcp"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Serve any MCP (Model Context Protocol) tool on the Railhead agentic marketplace — wrap a server, earn $RAIL per tool call"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -25,3 +25,6 @@ MCP         = "https://modelcontextprotocol.io"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["railhead_mcp*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "railhead_mcp.__version__"}

@@ -5,7 +5,7 @@ Prereqs:
     with a funded wallet on Chain 7777.
   - Node + npm available (this example uses `npx` to spawn the official
     @modelcontextprotocol/server-filesystem server).
-  - `pip install railhead-mcp`
+  - `pip install git+https://github.com/railheads/railhead-mcp.git`
 
 The filesystem MCP server scopes file access to a single root directory. The
 example uses /tmp/railhead-mcp-demo; change it to whatever you like.
@@ -38,7 +38,7 @@ server = StdioServerParameters(
 
 agent = MCPAgent.from_credentials()
 agent.serve_mcp_server(server, capability_prefix="fs_")
-agent.run(price_rail=1, stake_rail=1000)
+agent.run(price_rail=1, stake_rail=1000, endpoint="polling")
 
 
 # ── Wrap a single specific tool instead (alternative pattern) ──
