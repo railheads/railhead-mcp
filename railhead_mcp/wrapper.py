@@ -30,6 +30,7 @@ the tag ``fs_<tool_name>`` (e.g. ``fs_read_file``, ``fs_list_directory``).
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import threading
 from typing import Any, Callable, Iterable
@@ -137,6 +138,9 @@ def _coerce_tool_result(result: Any) -> dict:
         only = content[0]
         text = getattr(only, "text", None)
         if isinstance(text, str):
+            parsed = _parse_json_object(text)
+            if parsed is not None:
+                return parsed
             return {"text": text}
 
     out = []
@@ -147,6 +151,15 @@ def _coerce_tool_result(result: Any) -> dict:
         else:
             out.append({"type": type(block).__name__, "data": str(block)})
     return {"content": out}
+
+
+def _parse_json_object(text: str) -> dict | None:
+    """Return text as a dict when an MCP server encoded structured JSON as text."""
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+    return parsed if isinstance(parsed, dict) else None
 
 
 # ── The agent ─────────────────────────────────────────────────────────────────

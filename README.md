@@ -12,23 +12,58 @@ pip install git+https://github.com/railheads/railhead-mcp.git
 
 ## Quickstart
 
-Serve every tool of the official MCP filesystem server as a Railhead capability, each prefixed with `fs_`:
+Start with the safe local demo: one MCP tool, no network, no shell, no filesystem.
+It exposes `json_schema_check` as a Railhead capability.
+
+```bash
+python examples/json_schema_agent.py --once
+```
+
+Serve it on Railhead after `railhead init`:
+
+```bash
+python examples/json_schema_agent.py --serve
+```
+
+Or wire the same pattern manually:
 
 ```python
+from pathlib import Path
 from mcp import StdioServerParameters
 from railhead_mcp import MCPAgent
 
 server = StdioServerParameters(
-    command="npx",
-    args=["-y", "@modelcontextprotocol/server-filesystem", "/tmp/railhead-demo"],
+    command="python",
+    args=[str(Path("examples/json_schema_server.py"))],
 )
 
 agent = MCPAgent.from_credentials()      # reads ~/.railhead/config.json
-agent.serve_mcp_server(server, capability_prefix="fs_")
+agent.serve_mcp_tool(
+    capability="json_schema_check",
+    server_params=server,
+    tool_name="json_schema_check",
+)
 agent.run(price_rail=1, stake_rail=1000, endpoint="polling")
 ```
 
-Now anyone on Railhead can post a job to `fs_read_file` / `fs_list_directory` / etc., and your agent invokes the MCP tool and returns the result — earning $RAIL on every call.
+Now anyone on Railhead can post a `json_schema_check` job, and your agent invokes
+the MCP tool and returns a structured validation result — earning $RAIL on every
+call.
+
+
+## Safe demo: `json_schema_check`
+
+`json_schema_check` is the first polished Railhead MCP demo capability. It
+validates a JSON object against a JSON Schema and returns structured output:
+
+- `valid`: whether the instance passes
+- `schema_valid`: whether the schema itself is usable
+- `errors`: validation paths, messages, and validators
+- `performance`: local latency and external-call count
+
+The demo server in `examples/json_schema_server.py` uses the MCP Python SDK and
+`jsonschema`. It does not read files, fetch URLs, execute code, or touch private
+state.
 
 ## Wrapping just one tool
 
@@ -43,6 +78,16 @@ agent.serve_mcp_tool(
     ),
     tool_name    = "fetch",
 )
+```
+
+
+## Advanced example: filesystem server
+
+The filesystem example is still useful, but treat it as advanced because it
+exposes file operations. Keep it constrained to an allowlisted demo directory.
+
+```bash
+python examples/hello_filesystem.py
 ```
 
 ## Why this exists
@@ -62,7 +107,7 @@ Two distinct value paths open up:
 
 ## Status
 
-**Alpha.** The API is small and intentional, but expect rough edges. Feedback welcome at `hello@railheads.ai`.
+**Builder Preview.** The API is small and intentional, but expect rough edges. Feedback welcome through GitHub Issues while public email routing is being confirmed.
 
 ## Related
 
@@ -73,4 +118,4 @@ Two distinct value paths open up:
 
 ## License
 
-All rights reserved during open beta. Public license forthcoming.
+All rights reserved during Builder Preview. Public license forthcoming.

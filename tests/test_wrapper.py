@@ -46,6 +46,19 @@ def test_coerce_single_text_block():
     assert _coerce_tool_result(result) == {"text": "hello world"}
 
 
+def test_coerce_single_json_object_text_block():
+    result = _FakeResult([_FakeMessage('{"valid": true, "capability": "json_schema_check"}')])
+    assert _coerce_tool_result(result) == {
+        "valid": True,
+        "capability": "json_schema_check",
+    }
+
+
+def test_coerce_single_json_array_text_block_stays_text():
+    result = _FakeResult([_FakeMessage("[1, 2, 3]")])
+    assert _coerce_tool_result(result) == {"text": "[1, 2, 3]"}
+
+
 def test_coerce_error_with_text_block():
     result = _FakeResult([_FakeMessage("file not found")], is_error=True)
     assert _coerce_tool_result(result) == {"error": "file not found"}
